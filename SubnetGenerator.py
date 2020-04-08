@@ -20,20 +20,33 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
         print("Check starting address. No octet can be larger then 255.")
         return
     StartAddressIP = ipaddress.ip_address(StartAddress)
+    TotalSize = 2**(32-int(Size[1:]))
+    EndAddressIP = StartAddressIP + TotalSize
     #A list of the octets in binary for display
     StartAddressOcts = [bin(int(x))[2:].zfill(8) for x in StartAddressOcts]
     print("Start Address Binary: "+".".join(StartAddressOcts))
     #A list of the octets in binary for display
     BinSubnetMask = ''.zfill(32-SubnetCIDR).rjust(32, '1')
     print("Subnet Mask: "+BinSubnetMask)
-    #Loop through the
-
-
-    return
+    #Loop through the requirements matrix and start generating the output subnet matrix.
+    SubnetMatrix = {}
+    CurrentAddress = StartAddressIP;
+    for SubSize in ReqMatrix:
+        #Check if there is a requirement for this size of subnet. If not, move on.
+        if ReqMatrix[SubSize] == 0:
+            continue
+        else:
+            counter = 0
+            TrueSize = 2**(32-int(SubSize[1:]))
+            RecordName = 'Record'+str(counter)
+            SubnetMatrix[RecordName] = {'Size':SubSize, 'NetworkAddress':CurrentAddress, 'BroadcastAddress':CurrentAddress+TrueSize}
+            counter += 1
+    return (SubnetMatrix)
 
 if __name__ == '__main__':
     #Initial inputs. These will be replaced with hooks to web inputs in the future
     StartAddress = '200.120.177.0'
     Size = '/24'
     ReqMatrix = {'S24':0, 'S25':1, 'S26':0, 'S27':0, 'S28':0, 'S29':0, 'S30':0, 'S31':0}
-    GenerateSubnets(StartAddress, Size, ReqMatrix)
+    IPRecord = GenerateSubnets(StartAddress, Size, ReqMatrix)
+    print(IPRecord)
