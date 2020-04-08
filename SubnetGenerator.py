@@ -20,7 +20,7 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
         print("Check starting address. No octet can be larger then 255.")
         return
     StartAddressIP = ipaddress.ip_address(StartAddress)
-    TotalSize = 2**(32-int(Size[1:]))
+    TotalSize = 2**(32-int(Size[1:]))-1
     EndAddressIP = StartAddressIP + TotalSize
     #A list of the octets in binary for display
     StartAddressOcts = [bin(int(x))[2:].zfill(8) for x in StartAddressOcts]
@@ -31,22 +31,32 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
     #Loop through the requirements matrix and start generating the output subnet matrix.
     SubnetMatrix = {}
     CurrentAddress = StartAddressIP;
+    counter = 0
     for SubSize in ReqMatrix:
         #Check if there is a requirement for this size of subnet. If not, move on.
         if ReqMatrix[SubSize] == 0:
             continue
         else:
-            counter = 0
-            TrueSize = 2**(32-int(SubSize[1:]))
-            RecordName = 'Record'+str(counter)
-            SubnetMatrix[RecordName] = {'Size':SubSize, 'NetworkAddress':CurrentAddress, 'BroadcastAddress':CurrentAddress+TrueSize}
-            counter += 1
+            #If there is a requirement, loop through the subnetting process until we have met the requirement or run out of space.
+            for k in range(ReqMatrix[SubSize]):
+                TrueSize = 2**(32-int(SubSize[1:]))-1
+                RecordName = 'Record'+str(counter)
+                BroadcastAddress = CurrentAddress+TrueSize
+                #Check if we are exceeding the alotted IP space
+                if BroadcastAddress > EndAddressIP:
+                    print('Cannot accomodate '+SubSize+' requested in row '+str(counter))
+                    print('Exceeded IP address Space.')
+                    counter+=1
+                    continue
+                SubnetMatrix[RecordName] = {'Size':SubSize, 'NetworkAddress':CurrentAddress, 'BroadcastAddress':BroadcastAddress}
+                counter += 1
+                CurrentAddress = BroadcastAddress+1
     return (SubnetMatrix)
 
 if __name__ == '__main__':
     #Initial inputs. These will be replaced with hooks to web inputs in the future
     StartAddress = '200.120.177.0'
     Size = '/24'
-    ReqMatrix = {'S24':0, 'S25':1, 'S26':0, 'S27':0, 'S28':0, 'S29':0, 'S30':0, 'S31':0}
+    ReqMatrix = {'S24':0, 'S25':1, 'S26':10, 'S27':0, 'S28':0, 'S29':0, 'S30':0, 'S31':2}
     IPRecord = GenerateSubnets(StartAddress, Size, ReqMatrix)
     print(IPRecord)
