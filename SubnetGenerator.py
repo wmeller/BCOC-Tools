@@ -31,7 +31,7 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
     #Loop through the requirements matrix and start generating the output subnet matrix.
     SubnetMatrix = {}
     CurrentAddress = StartAddressIP;
-    counter = 0
+    counter = 1
     for SubSize in ReqMatrix:
         #Check if there is a requirement for this size of subnet. If not, move on.
         if ReqMatrix[SubSize] == 0:
@@ -51,12 +51,15 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
                 SubnetMatrix[RecordName] = {'Size':SubSize, 'NetworkAddress':CurrentAddress, 'BroadcastAddress':BroadcastAddress}
                 counter += 1
                 CurrentAddress = BroadcastAddress+1
+        #Determine reserve ip's
+        if CurrentAddress < EndAddressIP:
+            SubnetMatrix['Reserve'] = {'StartAddress':CurrentAddress, 'EndAddress':EndAddressIP}
     return (SubnetMatrix)
 
 if __name__ == '__main__':
     #Initial inputs. These will be replaced with hooks to web inputs in the future
     StartAddress = '200.120.177.0'
-    Size = '/24'
-    ReqMatrix = {'S24':0, 'S25':1, 'S26':10, 'S27':0, 'S28':0, 'S29':0, 'S30':0, 'S31':2}
+    Size = '/23'
+    ReqMatrix = {'S24':1, 'S25':1, 'S26':0, 'S27':0, 'S28':0, 'S29':0, 'S30':0, 'S31':2}
     IPRecord = GenerateSubnets(StartAddress, Size, ReqMatrix)
     print(IPRecord)
