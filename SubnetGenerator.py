@@ -7,18 +7,18 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
     r = re.compile('/\d*')
     if r.match(Size) is None or int(Size[1:]) > 31:
         print("Check the size of the start subnet: should be format /xx between 1 and 31")
-        return
+        return "Check the size of the start subnet: should be format /xx between 1 and 31"
     SubnetCIDR = int(Size[1:])
-    r = re.compile('\d*.\d*.\d*.\d*')
+    r = re.compile('^\d*.\d*.\d*.\d*$')
     if r.match(StartAddress) is None:
         print("check the format of the starting address: should be xxx.xxx.xxx.xxx")
-        return
+        return "check the format of the starting address: should be xxx.xxx.xxx.xxx"
     #Get octets from start address
     StartAddressOcts = StartAddress.split('.')
     #Check that the address is valid
     if any([int(x)>255 for x in StartAddressOcts]):
         print("Check starting address. No octet can be larger then 255.")
-        return
+        return "Check starting address. No octet can be larger then 255."
     StartAddressIP = ipaddress.ip_address(StartAddress)
     TotalSize = 2**(32-int(Size[1:]))-1
     EndAddressIP = StartAddressIP + TotalSize
@@ -48,7 +48,7 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
                     print('Exceeded IP address Space.')
                     counter+=1
                     continue
-                SubnetMatrix[RecordName] = {'Size':SubSize, 'NetworkAddress':CurrentAddress, 'BroadcastAddress':BroadcastAddress}
+                SubnetMatrix[RecordName] = {'Size':SubSize[1:], 'NetworkAddress':CurrentAddress, 'BroadcastAddress':BroadcastAddress}
                 counter += 1
                 CurrentAddress = BroadcastAddress+1
         #Determine reserve ip's
@@ -58,7 +58,7 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
 
 if __name__ == '__main__':
     #Initial inputs. These will be replaced with hooks to web inputs in the future
-    StartAddress = '200.120.177.0'
+    StartAddress = '200.200.200.290'
     Size = '/23'
     ReqMatrix = {'S24':1, 'S25':1, 'S26':0, 'S27':0, 'S28':0, 'S29':0, 'S30':0, 'S31':2}
     IPRecord = GenerateSubnets(StartAddress, Size, ReqMatrix)
