@@ -4,8 +4,13 @@ import ipaddress
 def GenerateSubnets(StartAddress, Size, ReqMatrix):
     #Given a start address, a subnet and a list of requirements, determine the start and end addresses of each of the resulting subnets as well as the address block in reserve.
     #Check that the inputs are correctly formatted
+    StartAddress = StartAddress.strip()
+    Size = Size.strip()
     r = re.compile('/\d*')
-    if r.match(Size) is None or int(Size[1:]) > 31:
+    if r.match(Size) is None:
+        print("Check the format of the subnet size: should be format /xx between 1 and 31")
+        return "Check the format of the start size: should be format /xx between 1 and 31"
+    if int(Size[1:]) > 31:
         print("Check the size of the start subnet: should be format /xx between 1 and 31")
         return "Check the size of the start subnet: should be format /xx between 1 and 31"
     SubnetCIDR = int(Size[1:])
@@ -58,8 +63,8 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
 
 if __name__ == '__main__':
     #Initial inputs. These will be replaced with hooks to web inputs in the future
-    StartAddress = '200.200.200.290'
-    Size = '/23'
+    StartAddress = '200.200.20a0.290'
+    Size = '/23uhgubhu'
     ReqMatrix = {'S24':1, 'S25':1, 'S26':0, 'S27':0, 'S28':0, 'S29':0, 'S30':0, 'S31':2}
     IPRecord = GenerateSubnets(StartAddress, Size, ReqMatrix)
     print(IPRecord)
