@@ -9,11 +9,11 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
     Size = Size.strip()
     r = re.compile('^/\d*$')
     if r.match(Size) is None:
-        print("Check the format of the subnet size: should be format /xx between 1 and 31")
-        return "Check the format of the start size: should be format /xx between 1 and 31"
+        print("Check the format of the subnet size: should be format /xx between 23 and 31")
+        return "Check the format of the start size: should be format /xx between 23 and 31"
     if int(Size[1:]) > 31:
-        print("Check the size of the start subnet: should be format /xx between 1 and 31")
-        return "Check the size of the start subnet: should be format /xx between 1 and 31"
+        print("Check the size of the start subnet: should be format /xx between 23 and 31")
+        return "Check the size of the start subnet: should be format /xx between 23 and 31"
     SubnetCIDR = int(Size[1:])
     r = re.compile('^\d*.\d*.\d*.\d*$')
     if r.match(StartAddress) is None:
@@ -67,10 +67,10 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
 
 
 if __name__ == '__main__':
-    # Initial inputs. These will be replaced with hooks to web inputs in the future
-    StartAddress = '200.200.200.0'
-    Size = '/27'
-    ReqMatrix = {'S24': 0, 'S25': 0, 'S26': 0, 'S27': 0,
+    # Test inputs. Only used when running this script stand alone.
+    StartAddress = '200.200.200.2'
+    Size = '/23'
+    ReqMatrix = {'S24': 1, 'S25': 1, 'S26': 0, 'S27': 0,
                  'S28': 0, 'S29': 0, 'S30': 0, 'S31': 2}
     IPRecord = GenerateSubnets(StartAddress, Size, ReqMatrix)
     print(IPRecord)
