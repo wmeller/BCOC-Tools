@@ -3,6 +3,7 @@ import ipaddress
 
 
 def GenerateSubnets(StartAddress, Size, ReqMatrix):
+    UserMsg = None
     # Given a start address, a subnet and a list of requirements, determine the start and end addresses of each of the resulting subnets as well as the address block in reserve.
     # Check that the inputs are correctly formatted
     StartAddress = StartAddress.strip()
@@ -50,9 +51,12 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
                 BroadcastAddress = CurrentAddress + TrueSize
                 # Check if we are exceeding the alotted IP space
                 if BroadcastAddress > EndAddressIP:
-                    print('Cannot accomodate ' + SubSize +
-                          ' requested in row ' + str(counter))
+                    print('Cannot accomodate ' + SubSize +' requested in row ' + str(counter))
                     print('Exceeded IP address Space.')
+                    if UserMsg is None:
+                        UserMsg = ['Cannot accomodate all requested subnets. Did not include:']
+                        UserMsg.append(' /'+SubSize[1:])
+                    UserMsg.append(', /'+SubSize[1:])
                     counter += 1
                     continue
                 SubnetMatrix[RecordName] = {
@@ -63,14 +67,15 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
         if CurrentAddress < EndAddressIP:
             SubnetMatrix['Reserve'] = {
                 'StartAddress': CurrentAddress, 'EndAddress': EndAddressIP}
-    return (SubnetMatrix)
+    return SubnetMatrix, UserMsg
 
 
 if __name__ == '__main__':
     # Test inputs. Only used when running this script stand alone.
     StartAddress = '200.200.200.2'
     Size = '/23'
-    ReqMatrix = {'S24': 1, 'S25': 1, 'S26': 0, 'S27': 0,
+    ReqMatrix = {'S24': 6, 'S25': 1, 'S26': 0, 'S27': 0,
                  'S28': 0, 'S29': 0, 'S30': 0, 'S31': 2}
-    IPRecord = GenerateSubnets(StartAddress, Size, ReqMatrix)
+    IPRecord, UserMsg = GenerateSubnets(StartAddress, Size, ReqMatrix)
+    print(''.join(UserMsg))
     print(IPRecord)
