@@ -3,7 +3,7 @@ import ipaddress
 
 
 def GenerateSubnets(StartAddress, Size, ReqMatrix):
-    UserMsg = None
+    UserMsg = False
     # Given a start address, a subnet and a list of requirements, determine the start and end addresses of each of the resulting subnets as well as the address block in reserve.
     # Check that the inputs are correctly formatted
     StartAddress = StartAddress.strip()
@@ -53,10 +53,11 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
                 if BroadcastAddress > EndAddressIP:
                     print('Cannot accomodate ' + SubSize +' requested in row ' + str(counter))
                     print('Exceeded IP address Space.')
-                    if UserMsg is None:
+                    if UserMsg is False:
                         UserMsg = ['Cannot accomodate all requested subnets. Did not include:']
                         UserMsg.append(' /'+SubSize[1:])
-                    UserMsg.append(', /'+SubSize[1:])
+                    else:
+                        UserMsg.append(', /'+SubSize[1:])
                     counter += 1
                     continue
                 SubnetMatrix[RecordName] = {
@@ -67,6 +68,8 @@ def GenerateSubnets(StartAddress, Size, ReqMatrix):
         if CurrentAddress < EndAddressIP:
             SubnetMatrix['Reserve'] = {
                 'StartAddress': CurrentAddress, 'EndAddress': EndAddressIP}
+    if UserMsg is not False:
+        UserMsg = ''.join(UserMsg)
     return SubnetMatrix, UserMsg
 
 
@@ -77,5 +80,5 @@ if __name__ == '__main__':
     ReqMatrix = {'S24': 6, 'S25': 1, 'S26': 0, 'S27': 0,
                  'S28': 0, 'S29': 0, 'S30': 0, 'S31': 2}
     IPRecord, UserMsg = GenerateSubnets(StartAddress, Size, ReqMatrix)
-    print(''.join(UserMsg))
+    print(UserMsg)
     print(IPRecord)
