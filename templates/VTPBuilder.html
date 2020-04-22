@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>BCOC Tools</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163701473-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-163701473-1');
+  </script>
+  <style>
+    body {
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-image: url("/static/Tech_Background.jpg")
+    }
+
+    h1 {
+      color: white;
+      font-family: 'PT Serif', serif;
+      font-size: 4em;
+    }
+
+    h2 {
+      color: white;
+      font-family: 'PT Serif', serif;
+      font-size: 3em;
+    }
+
+    p {
+      color: white;
+    }
+
+    b {
+      color: purple;
+      font-family: 'PT Serif', serif;
+      font-weight: bold;
+    }
+
+    .panel-heading {
+      background-color: rgba(0, 0, 0, .5);
+      font-size: 1.5em;
+      color: white;
+    }
+
+    .panel-body {
+      background-color: rgba(255, 255, 255, .5);
+      color: black;
+      padding-right: 5%;
+      padding-left: 5%;
+      padding-top: 2%;
+      padding-bottom: 2%;
+    }
+
+    .panel {
+      background-color: rgba(0, 0, 0, 0);
+    }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <ul class="nav nav-tabs">
+        <li><a href="https://weller.pythonanywhere.com/">Home</a></li>
+        <li><a href="https://weller.pythonanywhere.com/subnet">Auto Subnetting</a></li>
+        <li><a href="https://weller.pythonanywhere.com/annex_a">Annex A</a></li>
+        <li><a href="https://weller.pythonanywhere.com/annex_b">Annex B</a></li>
+        <li class="active"><a href="https://weller.pythonanywhere.com/vtp_builder">VTP Builder</a></li>
+      </ul>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <h1>VTP Builder</h1>
+      <p>The VTP Builder tool is designed to take your VLAN and site requirements and generate VTP Databases for you. You should be able to copy and paste from the panels into your VLAN diagrams directly.</p>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+  <br>
+
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">VLAN Table</div>
+        <div class="panel-body">
+          <table class="table" id="subnetTable">
+            <thead>
+              <tr>
+                <th>ID Number</th>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for value in SessionData['VLANList'] %}
+              <tr>
+                <td><input type="text" class="form-control" value={{ SessionData['VLANList'][value]['ID'] }}></td>
+                <td><input type="text" class="form-control" value={{ SessionData['VLANList'][value]['Name'] }}></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <input type="submit" class="btn btn-primary" value="Add VLAN">
+        </div>
+      </div>
+    </div>
+    <div class="col-sm"></div>
+  </div>
+  <br>
+</body>

@@ -3,7 +3,8 @@ import random
 from SubnetGenerator import GenerateSubnets
 
 '''
-to run the development server, run these commands in terminal:
+to run on the local development server, run these commands in terminal:
+cd /Users/wesleyeller/github/BCOC-Tools
 export FLASK_ENV=development
 export FLASK_APP=FlaskDevServer.py
 flask run
@@ -16,4 +17,6 @@ app.config["SECRET_KEY"] = '6d5sf4sa65f4as65f'
 
 @app.route('/', methods=["GET"])
 def main_page():
-    return 'Hello World!'
+    session['VLANList'] = {'1':{'ID':1, 'Name':'Servers'}, '2':{'ID':2, 'Name':'Users'}}
+    session.modified = True
+    return render_template('VTPBuilder.html', SessionData=session)
