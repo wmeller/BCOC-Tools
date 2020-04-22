@@ -6,6 +6,7 @@ returns size in CIDR notation. Smallest network is a /30. largest network is unb
 '''
 import math
 import sys
+from SubnetGenerator import GenerateSubnets
 def min_subnet_size(hosts_needed):
     if type(hosts_needed) is list:
         if not all([type(x) is int for x in hosts_needed]):
@@ -34,6 +35,20 @@ def min_size_fx(hosts_needed):
         size = 30
     return '/'+str(size)
 
+def build_compatibility_matrix(nets_needed):
+    ReqMatrix = {'S24': 0, 'S25': 0, 'S26': 0, 'S27': 0,
+                 'S28': 0, 'S29': 0, 'S30': 0, 'S31': 0}
+    if type(nets_needed) is list:
+        for net in nets_needed:
+            ReqMatrix['S'+net[1:]] = ReqMatrix['S'+net[1:]] + 1
+        return ReqMatrix
+    elif type(nets_needed) is str:
+        if int(nets_needed[1:]) < 24:
+            return ('net size required exceeds Class C network')
+        ReqMatrix['S'+nets_needed[1:]] = 1
+    else:
+        return 'Error:Input must be list or str in format /xx or Sxx'
+
 if __name__ == '__main__':
     print('Running tests')
     print('string test')
@@ -45,4 +60,13 @@ if __name__ == '__main__':
     print('bad list test')
     print(min_subnet_size(['12', '38']))
     print('good list test')
-    print(min_subnet_size([12, 38]))
+    nets_needed = min_subnet_size([12, 38])
+    print(nets_needed)
+    ReqMatrix = build_compatibility_matrix(nets_needed)
+    print(ReqMatrix)
+    #If SubnetGenerator.py is not in the same directory, this test will not work.
+    #However, the build_compatibility_matrix function is specifically designed to output a matrix for use with that function.
+    StartAddress = '200.200.200.2'
+    Size = '/23'
+    IPRecord, UserMsg = GenerateSubnets(StartAddress, Size, ReqMatrix)
+    print(IPRecord)
