@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>BCOC Tools</title>
+  <title>BCOC Annex B</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -10,312 +11,215 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
   <style>
-      body {
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-image: url("Tech_Background.jpg")
-        }
-        h1 {
-            color: white;
-            font-family: 'PT Serif', serif;
-            font-size:4em;
-        }
-        h2 {
-            color: white;
-            font-family: 'PT Serif', serif;
-            font-size:3em;
-        }
-        p {
-            color: white;
-        }
-        b{
-            color:purple;
-            font-family: 'PT Serif', serif;
-            font-weight: bold;
-        }
-        .panel-heading{
-            background-color:rgba(0,0,0,.5);
-            font-size:1.5em;
-            color: white;
-        }
-        .panel-body{
-            background-color:rgba(255,255,255,.5);
-            color: black;
-            padding-right:5%;
-            padding-left:5%;
-            padding-top:2%;
-            padding-bottom:2%;
-        }
-        .panel{
-            background-color:rgba(0,0,0,0);
-        }
+    body {
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-image: url("/Users/wesleyeller/github/BCOC-Tools/Tech_Background.jpg")
+    }
+
+    h1 {
+      color: white;
+      font-family: 'PT Serif', serif;
+      font-size: 4em;
+    }
+
+    h2 {
+      color: white;
+      font-family: 'PT Serif', serif;
+      font-size: 3em;
+    }
+
+    h3 {
+      color: white;
+    }
+
+    b, a.inline-link {
+      color: purple;
+      font-family: 'PT Serif', serif;
+      font-weight: bold;
+    }
+
+    p.head {
+      color: white;
+    }
+
+    td.result {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .panel-heading {
+      background-color: rgba(0, 0, 0, .5);
+      font-size: 1.5em;
+      color: white;
+    }
+
+    .panel-body {
+      background-color: rgba(255, 255, 255, .5);
+      color: black;
+      padding-right: 5%;
+      padding-left: 5%;
+      padding-top: 2%;
+      padding-bottom: 2%;
+    }
+
+    .panel {
+      background-color: rgba(0, 0, 0, 0);
+    }
+
     }
   </style>
 </head>
+
 <body>
-<div class = "row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="https://weller.pythonanywhere.com/">Home</a></li>
-              <li><a href="https://weller.pythonanywhere.com/subnet">Auto Subnetting</a></li>
-            </ul>
-        </div>
-        <div class="col-sm-2"></div>
-    </div>
-
-<div class = "row">
-    <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            <h1>BCOC Tools</h1>
-            <p>Below, you will find a set of tools for automating a few of the boring tasks we have to do. Enjoy!</p>
-        </div>
-    <div class="col-sm-2"></div>
-</div>
-<br>
-
-
-<div class = "row">
+  <div class="row">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">VLAN Subnetting Tool</div>
-          <div class="panel-body">
-            <a href="/static/Subnet_Allocation_Tool" class="btn btn-info" role="button" download>Download VLAN Subnetting Tool xls</a>
-            <p></p>
-            I generally have trouble remembering exactly how many hosts are allowed with each subnet size.
-            After a few times of going back and forth with that same VLSM table and my requirements, I put together this spreadsheet to do it for me.
-            Drop your user/host requirements into the given table and it will tell you what size subnet you need for that VLAN in CIDR notation. It
-            will also tell you the total number of each subnet size you need to make it more compatible with the auto subnetting tool. You could also
-            paste in unit NIPR/SIPR host requirements to get the WAN blocks you need to allocate to subordinates.
-          </div>
+      <ul class="nav nav-tabs">
+        <li><a href="https://weller.pythonanywhere.com/">Home</a></li>
+        <li><a href="https://weller.pythonanywhere.com/subnet">Auto Subnetting</a></li>
+        <li><a href="https://weller.pythonanywhere.com/annex_a">Annex A</a></li>
+        <li class="active"><a href="https://weller.pythonanywhere.com/annex_b">Annex B</a></li>
+      </ul>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <h1>Annex B</h1>
+      <p class='head'>Radio Communication Fundamentals and Singe Channel Radio</p>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+  <br>
+
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <h2>Summary</h2>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+  <br>
+
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">RF Communication Summary</div>
+        <div class="panel-body">
+          <p>
+            Radios communicate by embedding information onto radio waves. While you don't need to know too much about the specifics to be a great communications officer, it is both interesting and powerful to understand your tools. For a great walkthrough of the theory behind antennas without nearly any math, go to <a class="inline-link" href="https://www.allaboutcircuits.com/technical-articles/an-introduction-to-antenna-basics/">allaboutcircuits.com</a>. On the other hand, if you are a more mathy type, a wonderful website which covers the fundamentals of antenna theory and design is <a class="inline-link" href="http://www.antenna-theory.com/">antenna-theory.com</a>.
+          </p>
         </div>
+      </div>
     </div>
     <div class="col-sm"></div>
-</div>
-<br>
+  </div>
+  <br>
 
-<div class = "row">
+  <div class="row">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Auto Subnetting Tool</div>
-          <div class="panel-body">
-            <a href="https://weller.pythonanywhere.com/subnet" class="btn btn-info" role="button">Go To Auto Subnetting Web Tool</a>
-            <br>
-            The second addition to this website! Give it your starting block of IP's and the size of your block, then tell it what subnets you need.
-             It will generate a table of IP addresses for you with size, network and broadcast addresses, and your remaining IP addresses in reserve.
+      <div class="panel panel-default">
+        <div class="panel-heading">RF Resources</div>
+        <div class="panel-body">
+          <p>A list of downloads follows. Where possible, the documents are linked here. Otherwise, they take you to the Marines.mil publications page, which is CAC enabled. You can also try dropping the names into Google - most of them come up somewhere. </p>
+          <br>
+          <div class="list-group">
+            <a href="https://www.marines.mil/Portals/1/Publications/MCRP%208-10B.11.pdf?ver=2017-03-15-092827-423" class="list-group-item">USMC antenna handbook</a>
+            <a href="https://www.trngcmd.marines.mil/Portals/207/Docs/TBS/MCRP%203-40.3B%20Radio%20Operators%20Handbook.pdf" class="list-group-item">Radio Operators handbook</a>
+            <a href="https://www.marines.mil/Portals/1/Publications/NAVMC%203500.56A.pdf" class="list-group-item">Communications Training and Readiness Manual</a>
+            <a href="https://www.harris.com/sites/default/files/downloads/solutions/harris-falcon-iii-an-prc-152a-wideband-networking-handheld-radio.pdf" class="list-group-item">PRC-152 Data Sheet</a>
           </div>
         </div>
+      </div>
     </div>
     <div class="col-sm"></div>
-</div>
-<br>
+  </div>
+  <br>
 
-<div class = "row">
+  <div class="row">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">SLD Matrix to Tasking Statements Generator</div>
-          <div class="panel-body">
-            <a href="/static/SLD2Taskxls" class="btn btn-info" role="button" download>Download SLD to Tasking Matrix xls</a>
-            <p></p>
-            This spreadsheet lets you load in your SLD Matrix and it will generate the tasks for you for both MCR links and network links.
-           I wrote this tool for the MCR and networking TDG's, so it may require some updates for future assignments. It should do at least 90% of the work though.
-           At this point, network link speeds are determined by looking at the physical link for that network. The matrix doesn't know anything about multiple links between the same site.
-          </div>
+      <h2>Demonstrations</h2>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+  <br>
+
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">Balanced Transmission Line Demonstration</div>
+        <div class="panel-body">
+          <a href="/static/TXLineDemo" class="btn btn-info" role="button" download>Download Balanced Tx Line Demo xls</a>
+          <p></p>
+          <p>
+          Download the spreadsheet and follow the instructions. The purpose of the demo is to visualize what it means to signal balance a transmission line - this is how we reduce noise in very sensitive instruments or when our transmission lines are long and likely to be noisy (like when remoting an antenna hill).
+        </p>
         </div>
+      </div>
     </div>
     <div class="col-sm"></div>
-</div>
-<br>
+  </div>
+  <br>
 
-<div class = "row">
+  <div class="row">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Equipment Matrix to Tasking Statements Generator</div>
-          <div class="panel-body">
-            <a href="/static/Equip2Tasksxls" class="btn btn-info" role="button" download>Download Equipment to Tasking Matrix xls</a>
-            <p></p>
-            The Equipment Matrix to Tasking Statements tool will generate tasking statements from your equipment allocation matrix (duh).
-            There are two sheets. Use the first as a pre-built MCR equipment table, and just fill out numbers. If you want to generate tasks for any old equipment,
-            flip to the second tab and fill out the unit names, equipment type and quantities. You can probably just paste the entire table from the template in,
-            as long as you didn't mess with the template at all.
-          </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Signal Modulation Demonstration</div>
+        <div class="panel-body">
+          <a href="/static/ModDemo" class="btn btn-info" role="button" download>Download Signal Modulation Demo</a>
+          <p></p>
+          <p>
+          This excel file has demonstration for all of the common kinds of modulation used by the Marine Corps. Play around with the data and watch the signals shift to represent the unencrypted RF signal we generate.
+        </p>
         </div>
-    <div class="col-sm"></div>
+      </div>
+      <div class="col-sm"></div>
     </div>
-</div>
-<br>
+  </div>
+  <br>
 
-<div class = "row">
+  <div class="row">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Tool and Data Repo</div>
-          <div class="panel-body">
-            <a href="https://github.com/wmeller/BCOC-Tools"><b>Github page for BCOC tools</b></a>
-            <p></p>
-            For those of you who are interested in building on any of the tools I write, or want to play with any of the python scripts I use for some of these tasks,
-            the github repo where I store this project is linked here.
-          </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Phase Shift Keying Demonstration - Animated</div>
+        <div class="panel-body">
+          <a href="/static/PSKModDemo" class="btn btn-info" role="button" download>Download Animated PSK Mod Demo</a>
+          <p></p>
+          This demonstration generates an animation of Phase Shift Keying Modulation. Download the file, and enable the content. Type the message you want to see into the light blue message box, then click the "Send Signal" button to see the signal go out. (NOTE: This will only work on a machine where macro's are allowed. This is not likely to work on your USMC computer.)
         </div>
+      </div>
+      <div class="col-sm"></div>
     </div>
-    <div class="col-sm"></div>
-</div>
-<br>
+  </div>
+  <br>
 
-<div class = "row">
-    <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            <h2>Virtualization</h2>
-        </div>
-    <div class="col-sm-2"></div>
-</div>
-<br>
-
-<div class = "row">
+  <div class="row">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Virtualization Software</div>
-          <div class="panel-body">
-            <p></p>
-            There a few virtualization software packages. However, VMWare is by far the most common for home use and quick use in industry. It does not
-            the advantages of a real-time OS that VXWorks has, but you can set it up and play with it all you want. It is a great way to get some exposure to the
-            Linux operating system.
-            <a href="https://www.virtualbox.org/">VirtualBox Website</a>
-            <p></p>
-            To download the Ubuntu .iso (the file which contains the OS) go <a href="https://ubuntu.com/download/desktop"><b>here</b></a>
-            <p></p>
-            For a tutorial on setting it up and getting Ubuntu (a popular and familiar feeling Linux distribution) running, read the tutorial here:
-            <a href="https://askubuntu.com/questions/142549/how-to-install-ubuntu-on-virtualbox"><b>VirtualBox Website</b></a>
-            </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">Superimposed Sine Waves Demonstration</div>
+        <div class="panel-body">
+          <a href="/static/SuperimposedSineWavesDemo" class="btn btn-info" role="button" download>Download Sine Wave Superposition Demo</a>
+          <p></p>
+          <p>The Sine Wave superposition demo visualizes the fundamental geometry of radio waves - sin waves, and how they can be added together. This is the mathematical principle used for adding information to radio waves, detangling multiple RF signals impinging on a single antenna, and handing data off from one physical device to another. Play around with the characteristics of the two pre-defined waves to see how they superimpose on each other to create a new third wave. (NOTE: If the two signals you choose are 180 deg out of sync, mathematically, you should see a resulting signal of amplitude 0. You won't. Because of how Excel calculates sine values, you will see a small residual value usually of the order of 1E-14, which are basically rounding error.)</p>
         </div>
+      </div>
+      <div class="col-sm"></div>
     </div>
-    <div class="col-sm"></div>
-</div>
-<br>
-
-<div class = "row">
-    <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            <h2>Demonstrations</h2>
-        </div>
-    <div class="col-sm-2"></div>
-</div>
-<br>
-
-<div class = "row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Balanced Transmission Line Demonstration</div>
-          <div class="panel-body">
-            <a href="/static/TXLineDemo" class="btn btn-info" role="button" download>Download Balanced Tx Line Demo xls</a>
-            <p></p>
-            Download the spreadsheet and follow the instructions. The purpose of the demo is to visualize what it means to signal balance a transmission line -
-            this is how we reduce noise in very sensitive instruments or when our transmission lines are long and likely to be noisy (like when remoting an antenna hill).
-          </div>
-        </div>
-    </div>
-    <div class="col-sm"></div>
-</div>
-<br>
-
-<div class = "row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Signal Modulation Demonstration</div>
-          <div class="panel-body">
-            <a href="/static/ModDemo" class="btn btn-info" role="button" download>Download Signal Modulation Demo</a>
-            <p></p>
-            This excel file has demonstration for all of the common kinds of modulation used by the Marine Corps. Play around with the data and
-            watch the signals shift to represent the unencrypted RF signal we generate.
-          </div>
-        </div>
-        <div class="col-sm"></div>
-    </div>
-</div>
-<br>
-
-<div class = "row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Phase Shift Keying Demonstration - Animated</div>
-          <div class="panel-body">
-            <a href="/static/PSKModDemo" class="btn btn-info" role="button" download>Download Animated PSK Mod Demo</a>
-            <p></p>
-            This demonstration generates an animation of Phase Shift Keying Modulation. Download the file, and enable the content.
-            Type the message you want to see into the light blue message box, then click the "Send Signal" button to see the signal go out.
-            (NOTE: This will only work on a machine where macro's are allowed. This is not likely to work on your USMC computer.)
-          </div>
-        </div>
-        <div class="col-sm"></div>
-    </div>
-</div>
-<br>
-
-<div class = "row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Superimposed Sine Waves Demonstration</div>
-          <div class="panel-body">
-            <a href="/static/SuperimposedSineWavesDemo" class="btn btn-info" role="button" download>Download Sine Wave Superposition Demo</a>
-            <p></p>
-            The Sine Wave superposition demo visualizes the fundamental geometry of radio waves - sin waves, and how they can be added together. This is the mathematical
-            principle used for adding information to radio waves, detangling multiple RF signals impinging on a single antenna, and handing data off from one physical device
-            to another. Play around with the characteristics of the two pre-defined waves to see how they superimpose on each other to create a new third wave.
-            (NOTE: If the two signals you choose are 180 deg out of sync, mathematically, you should see a resulting signal of amplitude 0. You won't. Because of how Excel
-            calculates sine values, you will see a small residual value usually of the order of 1E-14, which are basically rounding error.)
-          </div>
-        </div>
-        <div class="col-sm"></div>
-    </div>
-</div>
-<br>
-
-<div class = "row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Solar Winds Tutorials</div>
-          <div class="panel-body">
-              SolarWinds, the Network Performance and Monitoring software used by USMC can be pretty finicky-but it looks sweet when it's all setup
-              and is the one of the two pieces of software I have seen specifically asked for by a G-6. I've skimmed the following tutorials, and thought
-               they were pretty good.
-              <a href="https://support.solarwinds.com/SuccessCenter/s/free-solarwinds-training-videos-npm"><b>SolarWinds website tutorials section</b></a>
-              <br>
-              <a href="https://www.solarwinds.com/-/media/solarwinds/swdcv2/licensed-products/network-performance-monitor/resources/product-guides/npm_administrator_guide.ashx?la=fr"><b>SolarWinds NPM Administrator Guide</b></a>
-          </div>
-        </div>
-        <div class="col-sm"></div>
-    </div>
-</div>
-<br>
-
-<div class = "row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-        <div class="panel panel-default">
-          <div class="panel-heading">Public Notes Drive</div>
-          <div class="panel-body">
-              Below is a link to the Public Notes Folder of my Google Drive. It contains files I've generated
-              which are generally helpful, and is alternate means to download many of the files mentioned and described above.
-              You need to be signed into a Google account to use it, of course.
-              <a href="https://drive.google.com/drive/folders/1jwt57-rK205VtDzrw-UkWUT1x2T4YN7q?usp=sharing"><b>Go to the Public Notes Drive</b></a>
-          </div>
-        </div>
-        <div class="col-sm"></div>
-    </div>
-</div>
-<br>
+  </div>
+  <br>
 
 </body>
+
 </html>
