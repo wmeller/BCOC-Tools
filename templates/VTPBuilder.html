@@ -10,6 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163701473-1"></script>
@@ -24,6 +25,10 @@
     gtag('config', 'UA-163701473-1');
   </script>
 
+<!--
+This script correctly calls on the button with the ID add_vlan gets pressed.
+However, it is getting called over and over again, and I actually don't need this to be an asynch request.
+it points to a server side address I deleted, /add_vlan
   <script>
     $(document).ready(function() {
           $("#add_vlan").click(function(e) {
@@ -41,7 +46,7 @@
           });
         });
   </script>
-
+-->
   <style>
     body {
       background-attachment: fixed;
@@ -126,6 +131,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">VLAN Table</div>
         <div class="panel-body">
+          <form action="/vtp_builder" method="post">
           <table class="table" id="subnetTable">
             <thead>
               <tr>
@@ -136,14 +142,16 @@
             <tbody>
               {% for value in SessionData['VLANList'] %}
               <tr>
-                <td><input type="text" class="form-control" value={{ SessionData['VLANList'][value]['ID'] }}></td>
-                <td><input type="text" class="form-control" value={{ SessionData['VLANList'][value]['Name'] }}></td>
-                <td><input type="submit" class="btn btn-primary" value="Delete VLAN"></td>
+                <td><input type="number" min="0" name={{ 'ID_NUM:'+value }} class="form-control" value={{ SessionData['VLANList'][value]['ID'] }}></td>
+                <td><input type="text" name={{ 'NAME:'+value }} class="form-control" value={{ SessionData['VLANList'][value]['Name'] }}></td>
+                <td><button type="submit" class="btn btn-danger" id={{ "DEL_ID:"+value }}><i class="fa fa-minus"></i> Delete</button></td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
-          <input type="submit" class="btn btn-primary" id="add_vlan" value="Add VLAN">
+          <button type="submit" class="btn btn-success" name="add_vlan" id="add_vlan"><i class="fa fa-plus"></i> Add VLAN</button>
+          <button type="submit" class="btn btn-primary" name="save_vlan" id="save_vlan"><i class="fa fa-save"></i> Save VLAN Matrix</button>
+        </form>
         </div id="end_VLAN_table">
       </div>
     </div>
