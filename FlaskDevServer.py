@@ -34,17 +34,26 @@ def vtp_build():
     if request.method=='GET':
         print('Running main page')
         if 'VLANList' not in session:
-            session['VLANList'] = OrderedDict({'1':{'ID':1, 'Name':'Servers'}, '2':{'ID':2, 'Name':'Users'}})
+            session['VLANList'] = {'1':{'ID':1, 'Name':'Servers'}, '2':{'ID':2, 'Name':'Users'}}
             session.modified = True
         return render_template('VTPBuilder.html', SessionData=session)
     print('POST!!!')
-    #pdb.set_trace()
+    print(request.form)
+    pdb.set_trace()
     if 'add_vlan' in request.form:
+        #Right now, for some reason, the session is getting ASCII sorted when it is handed off to the html. I'll have to figure that out later.
         LastID = natural_sort(list(session['VLANList'].keys()))[-1]
         NextID = str(int(LastID)+1)
         session['VLANList'][NextID]={'ID':int(NextID), 'Name':""}
         session.modified = True
-        print(session['VLANList'])
+        return redirect(url_for('vtp_build'))
+    elif 'save_vlan' in request.form:
+        #Save the vlan database
+        return redirect(url_for('vtp_build'))
+    elif 'DEL_ID' in request.form:
+        #Delete the requested VLAN
+        print('Delete function')
+        print(request.form)
         return redirect(url_for('vtp_build'))
     else:
         return redirect(url_for('vtp_build'))

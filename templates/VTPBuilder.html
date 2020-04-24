@@ -144,7 +144,7 @@ it points to a server side address I deleted, /add_vlan
               <tr>
                 <td><input type="number" min="0" name={{ 'ID_NUM:'+value }} class="form-control" value={{ SessionData['VLANList'][value]['ID'] }}></td>
                 <td><input type="text" name={{ 'NAME:'+value }} class="form-control" value={{ SessionData['VLANList'][value]['Name'] }}></td>
-                <td><button type="submit" class="btn btn-danger" id={{ "DEL_ID:"+value }}><i class="fa fa-minus"></i> Delete</button></td>
+                <td><button type="submit" class="btn btn-danger" name={{ "DEL_ID:"+value }} id={{ "DEL_ID:"+value }}><i class="fa fa-minus"></i> Delete</button></td>
               </tr>
               {% endfor %}
             </tbody>
