@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>BCOC Tools</title>
+  <title>VTP Builder</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -10,6 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163701473-1"></script>
   <script>
@@ -22,6 +23,25 @@
 
     gtag('config', 'UA-163701473-1');
   </script>
+
+  <script>
+    $(document).ready(function() {
+          $("#add_vlan").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+              type: "GET",
+              url: "/add_vlan",
+              success: function(result) {
+                alert('ok');
+              },
+              error: function(result) {
+                alert('error');
+              }
+            });
+          });
+        });
+  </script>
+
   <style>
     body {
       background-attachment: fixed;
@@ -118,12 +138,13 @@
               <tr>
                 <td><input type="text" class="form-control" value={{ SessionData['VLANList'][value]['ID'] }}></td>
                 <td><input type="text" class="form-control" value={{ SessionData['VLANList'][value]['Name'] }}></td>
+                <td><input type="submit" class="btn btn-primary" value="Delete VLAN"></td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
-          <input type="submit" class="btn btn-primary" value="Add VLAN">
-        </div>
+          <input type="submit" class="btn btn-primary" id="add_vlan" value="Add VLAN">
+        </div id="end_VLAN_table">
       </div>
     </div>
     <div class="col-sm"></div>
