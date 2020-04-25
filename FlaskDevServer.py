@@ -38,7 +38,7 @@ def vtp_build():
             session.modified = True
         return render_template('VTPBuilder.html', SessionData=session)
     print('POST!!!')
-    if 'add_vlan' in request.form:
+    if any(['add_vlan' in x for x in request.form.keys()]):
         #Right now, for some reason, the session is getting ASCII sorted when it is handed off to the html. I'll have to figure that out later.
         print('add VLAN function')
         LastID = natural_sort(list(session['VLANList'].keys()))[-1]
@@ -53,7 +53,16 @@ def vtp_build():
     elif any(['DEL_ID' in x for x in request.form.keys()]):
         #Delete the requested VLAN
         print('Delete function')
-        print(request.form)
+        print(session['VLANList'])
+        #Find the ID of the VLAN we want to delete
+        for key in request.form.keys():
+            if 'DEL_ID' in key:
+                DeletionIndex = key.split(':')[1]
+                print('DeletionIndex: '+DeletionIndex)
+                break
+        del session['VLANList'][DeletionIndex]
+        session.modified = True
+        print(session['VLANList'])
         return redirect(url_for('vtp_build'))
     else:
         return redirect(url_for('vtp_build'))
