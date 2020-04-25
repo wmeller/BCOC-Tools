@@ -41,6 +41,9 @@ def vtp_build():
     if any(['add_vlan' in x for x in request.form.keys()]):
         #Right now, for some reason, the session is getting ASCII sorted when it is handed off to the html. I'll have to figure that out later.
         print('add VLAN function')
+        #Save the VLAN table first
+        session['VLANList']=Save_VLAN_DB(request.form, session['VLANList'])
+        #Now modify the table to add a new line.
         LastID = natural_sort(list(session['VLANList'].keys()))[-1]
         NextID = str(int(LastID)+1)
         session['VLANList'][NextID]={'ID':int(NextID), 'Name':""}
@@ -49,11 +52,16 @@ def vtp_build():
     elif any(['save_vlan' in x for x in request.form.keys()]):
         #Save the vlan database
         print('Save VLAN DB function')
+        session['VLANList']=Save_VLAN_DB(request.form, session['VLANList'])
+        session.modified = True
         return redirect(url_for('vtp_build'))
     elif any(['DEL_ID' in x for x in request.form.keys()]):
         #Delete the requested VLAN
+        ## TODO:  a popup confirmation that the deletion is desired.
+        ## TODO: add 'unsaved changes' checkmark or reminder or something
         print('Delete function')
-        print(session['VLANList'])
+        #Save the VLAN table first
+        session['VLANList']=Save_VLAN_DB(request.form, session['VLANList'])
         #Find the ID of the VLAN we want to delete
         for key in request.form.keys():
             if 'DEL_ID' in key:
@@ -62,10 +70,18 @@ def vtp_build():
                 break
         del session['VLANList'][DeletionIndex]
         session.modified = True
-        print(session['VLANList'])
         return redirect(url_for('vtp_build'))
     else:
         return redirect(url_for('vtp_build'))
 
-def Save_VLAN_DB(SessionData):
-    return DB
+def Save_VLAN_DB(SessionData, VLANDB):
+    #This function saves modifications to the vlan table. Right now it is called by clicking save, but it could really also be called asynchronously on typing in the text boxes too.
+    for key in SessionData.keys():
+        if 'ID_NUM' in key:
+            RelID = key.split(':')[1]
+            VLANDB[RelID]['ID'] = SessionData[key]
+        elif 'NAME' in key:
+            RelID = key.split(':')[1]
+            VLANDB[RelID]['Name'] = SessionData[key]
+
+    return VLANDB
