@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- Popup modal for user messages -->
+{% macro render_modal(id, Msg, Title) -%}
+<div class="modal fade" tabindex="-1" id="{{ id }}" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="itemLabel">{{Title}}</h4>
+      </div>
+      <div class="modal-body" id="modal-body">
+        {{ Msg }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
 <head>
   <title>VTP Builder</title>
   <meta charset="utf-8">
@@ -8,7 +27,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -25,7 +44,7 @@
     gtag('config', 'UA-163701473-1');
   </script>
 
-<!--
+  <!--
 This script correctly calls on the button with the ID add_vlan gets pressed.
 However, it is getting called over and over again, and I actually don't need this to be an asynch request.
 it points to a server side address I deleted, /add_vlan
@@ -125,6 +144,15 @@ it points to a server side address I deleted, /add_vlan
   </div>
   <br>
 
+  {% if SessionData['UserMsg'] is string %}
+  {{ render_modal("user-msg-modal", SessionData['UserMsg'], 'Hey!') }}
+  <p>Script ran</p>
+  <script>
+    $("user-msg-modal").modal();
+  </script>
+  {% endif %}
+
+  <!-- VLAN Table -->
   <div class="row">
     <div class="col-sm-2"></div>
     <div class="col-sm-8">
@@ -132,30 +160,69 @@ it points to a server side address I deleted, /add_vlan
         <div class="panel-heading">VLAN Table</div>
         <div class="panel-body">
           <form action="/vtp_builder" method="post">
-          <table class="table" id="subnetTable">
-            <thead>
-              <tr>
-                <th>ID Number</th>
-                <th>Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for value in SessionData['VLANList'] %}
-              <tr>
-                <td><input type="number" min="0" name={{ 'ID_NUM:'+value }} class="form-control" value={{ SessionData['VLANList'][value]['ID'] }}></td>
-                <td><input type="text" name={{ 'NAME:'+value }} class="form-control" value={{ SessionData['VLANList'][value]['Name'] }}></td>
-                <td><button type="submit" class="btn btn-danger" name={{ "DEL_ID:"+value }} id={{ "DEL_ID:"+value }}><i class="fa fa-minus"></i> Delete</button></td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          <button type="submit" class="btn btn-success" name="add_vlan" id="add_vlan"><i class="fa fa-plus"></i> Add VLAN</button>
-          <button type="submit" class="btn btn-primary" name="save_vlan" id="save_vlan"><i class="fa fa-save"></i> Save VLAN Matrix</button>
-        </form>
+            <table class="table" id="subnetTable">
+              <thead>
+                <tr>
+                  <th>ID Number</th>
+                  <th>Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for value in SessionData['VLANList'] %}
+                <tr>
+                  <td><input type="number" min="0" name={{ 'ID_NUM:'+value }} class="form-control" value={{ SessionData['VLANList'][value]['ID'] }}></td>
+                  <td><input type="text" name={{ 'NAME:'+value }} class="form-control" value={{ SessionData['VLANList'][value]['Name'] }}></td>
+                  <td><button type="submit" class="btn btn-danger" name={{ "DEL_ID:"+value }} id={{ "DEL_ID:"+value }}><i class="fa fa-minus"></i> Delete</button></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <button type="submit" class="btn btn-success" name="add_vlan" id="add_vlan"><i class="fa fa-plus"></i> Add VLAN</button>
+            <button type="submit" class="btn btn-primary" name="save_vlan" id="save_vlan"><i class="fa fa-save"></i> Save VLAN Matrix</button>
+          </form>
         </div id="end_VLAN_table">
       </div>
     </div>
     <div class="col-sm"></div>
   </div>
   <br>
+
+  <!-- VTP configuration Menu -->
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">VTP Settings Table</div>
+        <div class="panel-body">
+          <form action="/vtp_builder" method="post">
+            <div class="row">
+              Enter your start address in xx.xx.xx.xx notation, and the subnet size you have to work with in CIDR notation (/xx).
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-sm-8">
+                <input type="text" name='StartAddress' class="form-control" value={{ SessionData['VTP_Config']['StartAddress'] }}>
+              </div>
+              <div class="col-sm-4">
+                <input type="text" name='TotalSize' class="form-control" value={{ SessionData['VTP_Config']['TotalSize'] }}>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-sm-6">
+                <button type="submit" class="btn btn-success" name="add_vtp" id="add_vtp"><i class="fa fa-plus"></i> Add VTP</button>
+                <button type="submit" class="btn btn-primary" name="save_vtp" id="save_vtp"><i class="fa fa-save"></i> Save All and Refresh</button>
+              </div>
+            </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm"></div>
+  </div>
+  <br>
+
+  <!-- VTP Panels -->
+
 </body>
