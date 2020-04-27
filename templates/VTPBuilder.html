@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <!--
 This script correctly calls on the button with the ID add_vlan gets pressed.
 However, it is getting called over and over again, and I actually don't need this to be an asynch request.
@@ -135,7 +136,7 @@ it points to a server side address I deleted, /add_vlan
         <div class="panel-heading">VLAN Table</div>
         <div class="panel-body">
           <form action="/vtp_builder" method="post">
-            <table class="table" id="subnetTable">
+            <table class="table" id="vlanTable">
               <thead>
                 <tr>
                   <th>ID Number</th>
@@ -175,14 +176,15 @@ it points to a server side address I deleted, /add_vlan
   </div>
   {% endif %}
 
-  <!-- VTP configuration Menu -->
-  <div class="row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-      <div class="panel panel-default">
-        <div class="panel-heading">VTP Settings Table</div>
-        <div class="panel-body">
-          <form action="/vtp_builder" method="post">
+  {% set VTP_DB = SessionData['VTP_DB'] %}
+  <form action="/vtp_builder" method="post">
+    <!-- VTP configuration Menu -->
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8">
+        <div class="panel panel-default">
+          <div class="panel-heading">VTP Settings Table</div>
+          <div class="panel-body">
             <div class="row">
               Enter your start address in xx.xx.xx.xx notation, and the subnet size you have to work with in CIDR notation (/xx).
             </div>
@@ -197,21 +199,62 @@ it points to a server side address I deleted, /add_vlan
             </div>
             <br>
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-sm-12">
                 <button type="submit" class="btn btn-success" name="add_vtp" id="add_vtp"><i class="fa fa-plus"></i> Add VTP</button>
                 <button type="submit" class="btn btn-primary" name="save_vtp" id="save_vtp"><i class="fa fa-save"></i> Save All and Refresh</button>
+                <button type="submit" class="btn btn-danger" name="gen_vtp_db" id="gen_vtp_db"><i class="fa fa-bolt"></i> Generate VTP DB text </button>
               </div>
             </div>
+          </div>
         </div>
-        </form>
       </div>
     </div>
-  </div>
-  <div class="col-sm"></div>
-  </div>
-  <br>
+    <div class="col-sm"></div>
+    </div>
+    <br>
 
-  <!-- VTP Panels -->
+    <!-- VTP Input Panels -->
+    {% for value in VTP_DB %}
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8">
+        <div class="panel panel-default">
+          <div class="panel-heading">{{ VTP_DB[value]['DomainName'] }} VTP Database </div>
+          <div class="panel-body">
+            <br>
+            <input type="text" name={{ 'DOMAIN_VTPID:'+value }} class="form-control" value={{ VTP_DB[value]['DomainName'] }}>
+            <br>
+            <table class="table" id="vlanTable">
+              <thead>
+                <tr>
+                  <th>VLAN</th>
+                  <th>Hosts</th>
+                  <th>Start Address</th>
+                  <th>Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for VLANID in SessionData['VLANList'] %}
+                <tr>
+                  <td> {{ SessionData['VLANList'][VLANID]['Name'] }} </td>
+                  <td><input type="number" min="0" name={{ 'HOSTVALUE_VTPID:'+value+'_VLANDID:'+VLANID }} class="form-control" value={{ VTP_DB[value]['VLANData'][VLANID]['Hosts'] }}></td>
+                  <td> {{ VTP_DB[value]['VLANData'][VLANID]['StartAddress'] }} </td>
+                  <td> {{ VTP_DB[value]['VLANData'][VLANID]['Size'] }} </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm"></div>
+    </div>
+    <br>
+    {% endfor %}
+  </form>
+  <!-- Scripts -->
   <script>
     $(document).ready(function() {
       $(".close").click(function() {

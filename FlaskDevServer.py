@@ -44,7 +44,7 @@ def vtp_build():
             session['VTP_DB'] = {'1':{'ID':1, 'DomainName':'Tech1', 'VLANData':{}}, '2':{'ID':2, 'DomainName':'COC', 'VLANData':{}}}
             for VTPID in session['VTP_DB'].keys():
                 for VLAN in session['VLANList'].keys():
-                    session['VTP_DB'][VTPID]['VLANData'][VLAN] = {'ID':session['VLANList'][VLAN]['ID'], 'Name':session['VLANList'][VLAN]['Name'], 'Hosts':0, 'StartAddress':None, 'Size':None}
+                    session['VTP_DB'][VTPID]['VLANData'][VLAN] = {'ID':session['VLANList'][VLAN]['ID'], 'Name':session['VLANList'][VLAN]['Name'], 'Hosts':0, 'StartAddress':'', 'Size':''}
             session.modified = True
         return render_template('VTPBuilder.html', SessionData=session)
     print('POST!!!')
@@ -60,12 +60,14 @@ def vtp_build():
         LastID = natural_sort(list(session['VLANList'].keys()))[-1]
         NextID = str(int(LastID)+1)
         session['VLANList'][NextID]={'ID':int(NextID), 'Name':""}
+        session['VTP_DB'] = Update_VTP_DB(session, request.form)
         session.modified = True
         return redirect(url_for('vtp_build'))
     elif any(['save_vlan' in x for x in request.form.keys()]):
         #Save the vlan database
         print('Save VLAN DB function')
         session['VLANList']=Save_VLAN_DB(request.form, session['VLANList'])
+        session['VTP_DB'] = Update_VTP_DB(session, request.form)
         session.modified = True
         return redirect(url_for('vtp_build'))
     elif any(['DEL_ID' in x for x in request.form.keys()]):
@@ -139,3 +141,16 @@ def Save_VTP_Config(SessionData, FormData):
         return SessionData,"For the network size "+Size+", the starting address "+StartAddress+" is not valid"
     #Ok, everything is good to go. Save the configuration.
     return  SessionData, UserMsg
+
+def Update_VTP_DB(SessionData, FormData):
+    #Update the VTP database with new vlan information
+    for VTPID in SessionData['VTP_DB'].keys():
+        for VLAN in SessionData['VLANList'].keys():
+            if not VLAN in SessionData['VTP_DB'][VTPID]['VLANData'].keys():
+                #If this is a new VLAN, just set a bunch of defaults
+                SessionData['VTP_DB'][VTPID]['VLANData'][VLAN] = {'ID':SessionData['VLANList'][VLAN]['ID'], 'Name':SessionData['VLANList'][VLAN]['Name'], 'Hosts':0, 'StartAddress':'', 'Size':''}
+            else:
+                #IF this is a previously known VLAN, just update the parts that might have changed.
+                SessionData['VTP_DB'][VTPID]['VLANData'][VLAN]['ID'] = SessionData['VLANList'][VLAN]['ID']
+                SessionData['VTP_DB'][VTPID]['VLANData'][VLAN]['Name'] = SessionData['VLANList'][VLAN]['Name']
+    return SessionData['VTP_DB']
