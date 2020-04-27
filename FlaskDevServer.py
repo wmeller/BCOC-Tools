@@ -132,5 +132,10 @@ def Save_VTP_Config(SessionData, FormData):
     except:
         print("check the format of the starting address: should be xxx.xxx.xxx.xxx")
         return SessionData, "Check the format of the starting address: should be xxx.xxx.xxx.xxx Every octet should be between 0-255"
+    try:
+        ipaddress.ip_network(StartAddress+Size)
+    except:
+        print("For the network size "+Size+", the starting address "+StartAddress+" is not valid")
+        return SessionData,"For the network size "+Size+", the starting address "+StartAddress+" is not valid"
     #Ok, everything is good to go. Save the configuration.
     return  SessionData, UserMsg

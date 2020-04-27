@@ -7,7 +7,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="itemLabel">{{Title}}</h4>
+        <h4 class="modal-title" id="itemLabel"> '{{ Title }}' </h4>
       </div>
       <div class="modal-body" id="modal-body">
         {{ Msg }}
@@ -26,24 +26,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163701473-1"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-
-    gtag('config', 'UA-163701473-1');
-  </script>
-
   <!--
 This script correctly calls on the button with the ID add_vlan gets pressed.
 However, it is getting called over and over again, and I actually don't need this to be an asynch request.
@@ -144,14 +127,6 @@ it points to a server side address I deleted, /add_vlan
   </div>
   <br>
 
-  {% if SessionData['UserMsg'] is string %}
-  {{ render_modal("user-msg-modal", SessionData['UserMsg'], 'Hey!') }}
-  <p>Script ran</p>
-  <script>
-    $("user-msg-modal").modal();
-  </script>
-  {% endif %}
-
   <!-- VLAN Table -->
   <div class="row">
     <div class="col-sm-2"></div>
@@ -186,6 +161,19 @@ it points to a server side address I deleted, /add_vlan
     <div class="col-sm"></div>
   </div>
   <br>
+
+  <!-- Alert for errors in the VTP configuration -->
+  {% if SessionData['UserMsg'] is string %}
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="alert alert-danger alert-dismissible" id="myAlert">
+        <a href="#" class="close">&times;</a>
+        <strong> {{SessionData['UserMsg']}}</strong>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 
   <!-- VTP configuration Menu -->
   <div class="row">
@@ -224,5 +212,13 @@ it points to a server side address I deleted, /add_vlan
   <br>
 
   <!-- VTP Panels -->
-
+  <script>
+    $(document).ready(function() {
+      $(".close").click(function() {
+        $("#myAlert").alert("close");
+      });
+    });
+  </script>
 </body>
+
+</html>
