@@ -183,7 +183,9 @@ it points to a server side address I deleted, /add_vlan
       <div class="col-sm-2"></div>
       <div class="col-sm-8">
         <div class="panel panel-default">
-          <div class="panel-heading"><h4 id="vtp_config_anchor"> VTP Settings Table </h4></div>
+          <div class="panel-heading">
+            <h4 id="vtp_config_anchor"> VTP Settings Table </h4>
+          </div>
           <div class="panel-body">
             <div class="row">
               Enter your start address in xx.xx.xx.xx notation, and the subnet size you have to work with in CIDR notation (/xx).
@@ -223,7 +225,10 @@ it points to a server side address I deleted, /add_vlan
           <div class="panel-body">
             <br>
             <div class="row">
-              <div class="col-sm-8">
+              <div class="col-sm-3">
+                <strong> Edit the Domain Name: </strong>
+              </div>
+              <div class="col-sm-5">
                 <input type="text" name={{ 'DOMAIN_VTPID:'+value }} class="form-control" value={{ VTP_DB[value]['DomainName'] }}>
               </div>
               <div class="col-sm-4">
@@ -251,7 +256,14 @@ it points to a server side address I deleted, /add_vlan
                 {% endfor %}
               </tbody>
             </table>
-            <br>
+            <label class="checkbox-inline">
+              {% if "Core" == VTP_DB[value]['Type'] %}
+                <input type="checkbox" name={{"VTP_TYPE_ID:"+value }} checked>Core. Uncheck for Distribution
+              {% endif %}
+              {% if "Distribution" == VTP_DB[value]['Type'] %}
+                <input type="checkbox" name={{"VTP_TYPE_ID:"+value }} >Distribution. Check for Core
+              {% endif %}
+            </label>
           </div>
         </div>
       </div>
@@ -261,6 +273,46 @@ it points to a server side address I deleted, /add_vlan
     <br>
     {% endfor %}
   </form>
+
+  <!-- VTP Printout -->
+  {% if SessionData['VTP_Printout_Flag'] %}
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <h2 id="vtp_printout"> VTP DB LAN Diagram Tables </h2>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+  <br>
+
+  {% for value in VTP_DB|reverse %}
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">{{ VTP_DB[value]['DomainName'] }} VTP Database </div>
+        <div class="panel-body">
+          <div class="row">
+            {% for row in VTP_DB[value]['TextTable'] %}
+              {% if 'break' == row %}
+                <br>
+              {% else %}
+                <div class="row">
+                  {{ row }}
+                </div>
+              {% endif %}
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm"></div>
+  </div>
+  <br>
+  {% endfor %}
+
+  {% endif %}
+
   <!-- Scripts -->
   <script>
     $(document).ready(function() {

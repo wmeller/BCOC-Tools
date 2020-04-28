@@ -29,8 +29,10 @@ def min_size_fx(hosts_needed):
     '''
     returns size in CIDR notation
     '''
+    if hosts_needed == 0:
+        return None
     size = 32-(math.log(hosts_needed+2))/math.log(2)
-    size = math.ceil(size)
+    size = math.floor(size)
     if size > 30:
         size = 30
     return '/'+str(size)
@@ -52,7 +54,7 @@ def build_compatibility_matrix(nets_needed):
 if __name__ == '__main__':
     print('Running tests')
     print('string test')
-    print(min_subnet_size('14'))
+    print(min_subnet_size('3'))
     print('bad string test')
     print(min_subnet_size('a'))
     print('int test')
@@ -66,7 +68,7 @@ if __name__ == '__main__':
     print(ReqMatrix)
     #If SubnetGenerator.py is not in the same directory, this test will not work.
     #However, the build_compatibility_matrix function is specifically designed to output a matrix for use with that function.
-    StartAddress = '200.200.200.2'
+    StartAddress = '200.200.200.0'
     Size = '/23'
     IPRecord, UserMsg = GenerateSubnets(StartAddress, Size, ReqMatrix)
     print(IPRecord)
