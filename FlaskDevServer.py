@@ -97,10 +97,36 @@ def vtp_build():
     elif any(['add_vtp' in x for x in request.form.keys()]):
         #Add VTP to Table
         return redirect(url_for('vtp_build'))
+    elif any(['DEL_VTP' in x for x in request.form.keys()]):
+        #Delete the requested VLAN
+        ## TODO:  a popup confirmation that the deletion is desired.
+        ## TODO: add 'unsaved changes' checkmark or reminder or something
+        print('Delete VTP function')
+        #Save the VTP table first
+        session['VTP_DB'] = Update_VTP_DB(session, request.form)
+        #Find the ID of the VTP we want to delete
+        for key in request.form.keys():
+            if 'DEL_VTP' in key:
+                DeletionIndex = key.split(':')[1]
+                print('DeletionIndex: '+DeletionIndex)
+                break
+        del session['VTP_DB'][DeletionIndex]
+        session.modified = True
+        return redirect(url_for('vtp_build'))
+    elif any(['save_and_update_vtp' in x for x in request.form.keys()]):
+        #Save all the data from the VTP forms and update all the addresses and sizes. Clear the generated text blocks
+        return redirect(url_for('vtp_build'))
+    elif any(['gen_vtp_db' in x for x in request.form.keys()]):
+        #Generate the text blocks for direct copy and pasting into a LAN network diagram
+        return redirect(url_for('vtp_build'))
     else:
         print('Whatever you just clicked, it doesnt do anything.')
         return redirect(url_for('vtp_build'))
 
+
+######################################################################
+#################          Functions                ##################
+######################################################################
 def Save_VLAN_DB(SessionData, VLANDB):
     #This function saves modifications to the vlan table. Right now it is called by clicking save, but it could really also be called asynchronously on typing in the text boxes too.
     for key in SessionData.keys():

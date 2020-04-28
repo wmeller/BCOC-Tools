@@ -201,7 +201,7 @@ it points to a server side address I deleted, /add_vlan
             <div class="row">
               <div class="col-sm-12">
                 <button type="submit" class="btn btn-success" name="add_vtp" id="add_vtp"><i class="fa fa-plus"></i> Add VTP</button>
-                <button type="submit" class="btn btn-primary" name="save_vtp" id="save_vtp"><i class="fa fa-save"></i> Save All and Refresh</button>
+                <button type="submit" class="btn btn-primary" name="save_and_update_vtp" id="save_vtp"><i class="fa fa-save"></i> Save All and Refresh</button>
                 <button type="submit" class="btn btn-danger" name="gen_vtp_db" id="gen_vtp_db"><i class="fa fa-bolt"></i> Generate VTP DB text </button>
               </div>
             </div>
@@ -222,7 +222,14 @@ it points to a server side address I deleted, /add_vlan
           <div class="panel-heading">{{ VTP_DB[value]['DomainName'] }} VTP Database </div>
           <div class="panel-body">
             <br>
-            <input type="text" name={{ 'DOMAIN_VTPID:'+value }} class="form-control" value={{ VTP_DB[value]['DomainName'] }}>
+            <div class="row">
+              <div class="col-sm-8">
+                <input type="text" name={{ 'DOMAIN_VTPID:'+value }} class="form-control" value={{ VTP_DB[value]['DomainName'] }}>
+              </div>
+              <div class="col-sm-4">
+                <button type="submit" class="btn btn-danger" name="DEL_VTP:{{ value }}" id="delete"><i class="fa fa-minus"></i> Delete VTP database </button>
+              </div>
+            </div>
             <br>
             <table class="table" id="vlanTable">
               <thead>
