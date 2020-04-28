@@ -40,7 +40,7 @@ def vtp_build():
             session['UserMsg'] = False
             session['ErrorMsg'] = False
             session['VLANList'] = {'1':{'ID':1, 'Name':'Servers'}, '2':{'ID':2, 'Name':'Users'}}
-            session['VTP_Config'] = {'StartAddress':'192.168.0.0', 'TotalSize':'/24'}
+            session[''] = {'StartAddress':'192.168.0.0', 'TotalSize':'/24'}
             session['VTP_DB'] = {'1':{'ID':1, 'DomainName':'Tech1', 'VLANData':{}}, '2':{'ID':2, 'DomainName':'COC', 'VLANData':{}}}
             for VTPID in session['VTP_DB'].keys():
                 for VLAN in session['VLANList'].keys():
@@ -60,14 +60,14 @@ def vtp_build():
         LastID = natural_sort(list(session['VLANList'].keys()))[-1]
         NextID = str(int(LastID)+1)
         session['VLANList'][NextID]={'ID':int(NextID), 'Name':""}
-        session['VTP_DB'] = Update_VTP_DB(session, request.form)
+        session['VTP_DB'] = Update_VTP_DB_VLAN_data(session, request.form)
         session.modified = True
         return redirect(url_for('vtp_build'))
     elif any(['save_vlan' in x for x in request.form.keys()]):
         #Save the vlan database
         print('Save VLAN DB function')
         session['VLANList']=Save_VLAN_DB(request.form, session['VLANList'])
-        session['VTP_DB'] = Update_VTP_DB(session, request.form)
+        session['VTP_DB'] = Update_VTP_DB_VLAN_data(session, request.form)
         session.modified = True
         return redirect(url_for('vtp_build'))
     elif any(['DEL_ID' in x for x in request.form.keys()]):
@@ -96,14 +96,22 @@ def vtp_build():
         return redirect(url_for('vtp_build'))
     elif any(['add_vtp' in x for x in request.form.keys()]):
         #Add VTP to Table
-        return redirect(url_for('vtp_build'))
+        #Save the VTP table first
+        session['VTP_DB'] = Update_VTP_DB_VLAN_data(session, request.form)
+        #Now modify the table to add a new line.
+        LastID = natural_sort(list(session['VTP_DB'].keys()))[-1]
+        NextID = str(int(LastID)+1)
+        session['VTP_DB'][NextID]={'ID':int(NextID), 'DomainName':'New', 'VLANData':{}}
+        session['VTP_DB'] = Update_VTP_DB_VLAN_data(session, request.form)
+        session.modified = True
+        return redirect(url_for('vtp_build', _anchor="vtp_config_anchor"))
     elif any(['DEL_VTP' in x for x in request.form.keys()]):
         #Delete the requested VLAN
         ## TODO:  a popup confirmation that the deletion is desired.
         ## TODO: add 'unsaved changes' checkmark or reminder or something
         print('Delete VTP function')
         #Save the VTP table first
-        session['VTP_DB'] = Update_VTP_DB(session, request.form)
+        session['VTP_DB'] = Update_VTP_DB_VLAN_data(session, request.form)
         #Find the ID of the VTP we want to delete
         for key in request.form.keys():
             if 'DEL_VTP' in key:
@@ -112,9 +120,10 @@ def vtp_build():
                 break
         del session['VTP_DB'][DeletionIndex]
         session.modified = True
-        return redirect(url_for('vtp_build'))
+        return redirect(url_for('vtp_build', _anchor="vtp_config_anchor"))
     elif any(['save_and_update_vtp' in x for x in request.form.keys()]):
         #Save all the data from the VTP forms and update all the addresses and sizes. Clear the generated text blocks
+        session['VTP_DB'] = Update_VTP_DB_Config(session['VTP_Config'], request.form)
         return redirect(url_for('vtp_build'))
     elif any(['gen_vtp_db' in x for x in request.form.keys()]):
         #Generate the text blocks for direct copy and pasting into a LAN network diagram
@@ -168,7 +177,7 @@ def Save_VTP_Config(SessionData, FormData):
     #Ok, everything is good to go. Save the configuration.
     return  SessionData, UserMsg
 
-def Update_VTP_DB(SessionData, FormData):
+def Update_VTP_DB_VLAN_data(SessionData, FormData):
     #Update the VTP database with new vlan information
     for VTPID in SessionData['VTP_DB'].keys():
         for VLAN in SessionData['VLANList'].keys():
@@ -179,4 +188,27 @@ def Update_VTP_DB(SessionData, FormData):
                 #IF this is a previously known VLAN, just update the parts that might have changed.
                 SessionData['VTP_DB'][VTPID]['VLANData'][VLAN]['ID'] = SessionData['VLANList'][VLAN]['ID']
                 SessionData['VTP_DB'][VTPID]['VLANData'][VLAN]['Name'] = SessionData['VLANList'][VLAN]['Name']
+    return SessionData['VTP_DB']
+
+def Update_VTP_DB_Config(SessionData, FormData):
+    #Gather all the updates to the VTP databases.
+    #Inputs are Domain names and hosts
+    #Knowns are the VLAN data for each VTP database
+    #Output is updating the VTP configuration panels with the domain names, start addresses and subnet sizes
+    #TODO: only check databases which are showing unedited changes?
+
+    #Loop through all the form data and update the corresponding trash
+    for key in FormData:
+        if "DOMAIN_VTPID" in key:
+            ID = key.split(':')[1]
+            SessionData[ID]['DomainName'] = FormData[key]
+        elif "HOSTVALUE_VTPID" in key:
+            VTP_ID = key.split(':')[1]
+            VLAN_ID = key.split(':')[3]
+            SessionData[VTP_ID]['VLANData'][VLAN_ID]['Hosts']=FormData[key]
+    #Create the requirements table for the Hosts
+
+    #Do the function calls to get the addresses I want to show
+
+    #Populate the tables.
     return SessionData['VTP_DB']

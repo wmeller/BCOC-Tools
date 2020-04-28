@@ -183,7 +183,7 @@ it points to a server side address I deleted, /add_vlan
       <div class="col-sm-2"></div>
       <div class="col-sm-8">
         <div class="panel panel-default">
-          <div class="panel-heading">VTP Settings Table</div>
+          <div class="panel-heading"><h4 id="vtp_config_anchor"> VTP Settings Table </h4></div>
           <div class="panel-body">
             <div class="row">
               Enter your start address in xx.xx.xx.xx notation, and the subnet size you have to work with in CIDR notation (/xx).
@@ -201,7 +201,7 @@ it points to a server side address I deleted, /add_vlan
             <div class="row">
               <div class="col-sm-12">
                 <button type="submit" class="btn btn-success" name="add_vtp" id="add_vtp"><i class="fa fa-plus"></i> Add VTP</button>
-                <button type="submit" class="btn btn-primary" name="save_and_update_vtp" id="save_vtp"><i class="fa fa-save"></i> Save All and Refresh</button>
+                <button type="submit" class="btn btn-primary" name="save_and_update_vtp" id="save_and_update_vtp"><i class="fa fa-save"></i> Save All and Refresh</button>
                 <button type="submit" class="btn btn-danger" name="gen_vtp_db" id="gen_vtp_db"><i class="fa fa-bolt"></i> Generate VTP DB text </button>
               </div>
             </div>
@@ -214,7 +214,7 @@ it points to a server side address I deleted, /add_vlan
     <br>
 
     <!-- VTP Input Panels -->
-    {% for value in VTP_DB %}
+    {% for value in VTP_DB|reverse %}
     <div class="row">
       <div class="col-sm-2"></div>
       <div class="col-sm-8">
@@ -244,7 +244,7 @@ it points to a server side address I deleted, /add_vlan
                 {% for VLANID in SessionData['VLANList'] %}
                 <tr>
                   <td> {{ SessionData['VLANList'][VLANID]['Name'] }} </td>
-                  <td><input type="number" min="0" name={{ 'HOSTVALUE_VTPID:'+value+'_VLANDID:'+VLANID }} class="form-control" value={{ VTP_DB[value]['VLANData'][VLANID]['Hosts'] }}></td>
+                  <td><input type="number" min="0" name={{ 'HOSTVALUE_VTPID:'+value+':_VLANDID:'+VLANID }} class="form-control" value={{ VTP_DB[value]['VLANData'][VLANID]['Hosts'] }}></td>
                   <td> {{ VTP_DB[value]['VLANData'][VLANID]['StartAddress'] }} </td>
                   <td> {{ VTP_DB[value]['VLANData'][VLANID]['Size'] }} </td>
                 </tr>
